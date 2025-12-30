@@ -1,72 +1,74 @@
 import 'package:flutter/material.dart';
-import 'tracking_screen.dart'; // To navigate to the map
+import '../main_wrapper.dart'; // Import the new navigation hub
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Setup the controllers with your specific info
-  final TextEditingController _ipController = TextEditingController(text: '10.42.0.141');
-  final TextEditingController _tokenController = TextEditingController(text: '9TJ1WTF9VCpY2e9_d9e2c_L9Rl6h-M76tJdo3nmsx7...');
+  // Static configuration (Professional tip: Move these to a config file later)
+  final TextEditingController _ipController = TextEditingController(text: 'Username');
+  final TextEditingController _tokenController = TextEditingController(text: 'Password');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Family App - Setup"),
-        backgroundColor: Colors.blueAccent,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20.0),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(30.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.security, size: 80, color: Colors.blueAccent),
-            SizedBox(height: 30),
+            const SizedBox(height: 80),
+            const Icon(Icons.health_and_safety, size: 100, color: Colors.teal),
+            const SizedBox(height: 20),
+            const Text("Family Health Guard", 
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.teal)),
+            const SizedBox(height: 10),
+            const Text("Setup your connection to start monitoring", 
+              style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 40),
             
             // Server IP Field
             TextField(
               controller: _ipController,
               decoration: InputDecoration(
                 labelText: 'InfluxDB Server IP',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.computer),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                prefixIcon: const Icon(Icons.lan),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
-            // Token Field
+            // Access Token Field
             TextField(
               controller: _tokenController,
               decoration: InputDecoration(
                 labelText: 'Access Token',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.vpn_key),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                prefixIcon: const Icon(Icons.lock_open),
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 40),
             
-            // Login Button
+            // Login Button - Navigates to the professional dashboard
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50),
-                backgroundColor: Colors.blueAccent,
+                minimumSize: const Size(double.infinity, 55),
+                backgroundColor: Colors.teal,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onPressed: () {
-                // Navigate to TrackingScreen and pass the IP and Token
-                Navigator.push(
+                // Use pushReplacement so the user can't go back to Login without logout
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => TrackingScreen(
-                      serverIp: _ipController.text,
-                      token: _tokenController.text,
-                    ),
-                  ),
+                  MaterialPageRoute(builder: (context) => const MainWrapper()),
                 );
               },
-              child: Text("Start Tracking", style: TextStyle(color: Colors.white, fontSize: 18)),
+              child: const Text("Connect & Start", 
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
