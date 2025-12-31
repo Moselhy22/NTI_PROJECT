@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Health Band</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+</head>
+<body>
+    <header>
+        <h1>Smart Health Band</h1>
+        {% if session.get('logged_in') %}
+        <div class="user-info">
+            👤 {{ session.name }} | <a href="/logout" style="color:#3498db;">Logout</a>
+        </div>
+        {% endif %}
+        <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/services">Services</a>
+            <a href="/products">Products</a>
+            <a href="/contact">Contact</a>
+            {% if not session.get('logged_in') %}
+            <a href="/register">Register</a>
+            <a href="/login">Sign In</a>
+            {% else %}
+            <a href="/cart">🛒 Cart</a>
+            <a href="/profile">Profile</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Smart Health Band • AI-Powered Health Monitoring</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

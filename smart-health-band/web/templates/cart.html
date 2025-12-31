@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🛒 Your Shopping Cart</h2>
+<div id="cart-items">Loading...</div>
+<div id="cart-total" style="margin-top:20px; font-size:1.2em; font-weight:bold;"></div>
+<button id="checkout-btn" style="margin-top:20px; display:none;">💳 Proceed to Checkout</button>
+
+<script>
+function updateCart() {
+    const cart = JSON.parse(localStorage.getItem('healthband-cart') || '[]');
+    const itemsDiv = document.getElementById('cart-items');
+    const totalDiv = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    if (cart.length === 0) {
+        itemsDiv.innerHTML = '<p>Your cart is empty. <a href="/products">Browse products</a></p>';
+        totalDiv.textContent = '';
+        checkoutBtn.style.display = 'none';
+    } else {
+        let html = '<ul>';
+        cart.forEach((item, i) => {
+            html += `<li>${item.name} - $${item.price.toFixed(2)}
+                     <button class="remove-btn" data-index="${i}" style="margin-left:10px; color:#e74c3c;">Remove</button></li>`;
+        });
+        html += '</ul>';
+        itemsDiv.innerHTML = html;
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        totalDiv.textContent = `Total: $${total.toFixed(2)}`;
+        checkoutBtn.style.display = 'block';
+
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = btn.dataset.index;
+                cart.splice(index, 1);
+                localStorage.setItem('healthband-cart', JSON.stringify(cart));
+                updateCart();
+            });
+        });
+    }
+}
+
+document.getElementById('checkout-btn')?.addEventListener('click', () => {
+    alert('✅ Order placed! (Demo mode)');
+    localStorage.removeItem('healthband-cart');
+    updateCart();
+});
+
+updateCart();
+</script>
+{% endblock %}

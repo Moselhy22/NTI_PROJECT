@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if session.user_type == 'doctor' %}
+    <h2>👨‍⚕️ Doctor Dashboard</h2>
+    <p>Welcome, Dr. {{ session.name }}!</p>
+
+    <div style="background: #f0f9ff; padding: 20px; border-radius: 12px; margin-top: 20px; border-left: 4px solid #3498db;">
+        <h3>📅 Schedule Patient Revisit</h3>
+        <form method="POST" action="/schedule-appointment">
+            <label>Patient Username or Email *</label>
+            <input type="text" name="patient_identifier" required placeholder="e.g., omar.m or omar@example.com" style="width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <label>Visit Date *</label>
+            <input type="date" name="visit_date" required style="width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <label>Visit Time *</label>
+            <input type="time" name="visit_time" required style="width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <button type="submit" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 10px;">✅ Schedule Revisit</button>
+        </form>
+    </div>
+
+    <h3 style="margin-top: 25px;">📅 Your Scheduled Appointments</h3>
+    {% if appointments %}
+        {% for appt in appointments %}
+        <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 16px; border-radius: 10px; margin: 12px 0;">
+            <p><strong>👤 Patient:</strong> {{ appt.patient_email }}</p>
+            <p>📆 {{ appt.visit_date }} at {{ appt.visit_time }}</p>
+            <p>✅ {{ appt.status }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No scheduled appointments.</p>
+    {% endif %}
+{% else %}
+    <h2>👤 Patient Dashboard</h2>
+    <p><strong>Welcome, {{ session.name }}!</strong></p>
+
+    <!-- SIMPLE TABS USING URL FRAGMENTS -->
+    <div style="display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap;">
+        <a href="#calendar" style="text-decoration: none;">
+            <button style="padding: 10px 16px; background: {{ 'white' if request.args.get('tab') == 'vitals' or request.args.get('tab') == 'reminders' else '#3498db' }}; color: {{ 'black' if request.args.get('tab') == 'vitals' or request.args.get('tab') == 'reminders' else 'white' }}; border: 1px solid #3498db; border-radius: 8px; cursor: pointer;">📅 Calendar</button>
+        </a>
+        <a href="#vitals" style="text-decoration: none;">
+            <button style="padding: 10px 16px; background: {{ 'white' if request.args.get('tab') == 'calendar' or request.args.get('tab') == 'reminders' else '#3498db' }}; color: {{ 'black' if request.args.get('tab') == 'calendar' or request.args.get('tab') == 'reminders' else 'white' }}; border: 1px solid #3498db; border-radius: 8px; cursor: pointer;">❤️ Vitals</button>
+        </a>
+        <a href="#reminders" style="text-decoration: none;">
+            <button style="padding: 10px 16px; background: {{ 'white' if request.args.get('tab') == 'calendar' or request.args.get('tab') == 'vitals' else '#3498db' }}; color: {{ 'black' if request.args.get('tab') == 'calendar' or request.args.get('tab') == 'vitals' else 'white' }}; border: 1px solid #3498db; border-radius: 8px; cursor: pointer;">🔔 Reminders</button>
+        </a>
+    </div>
+
+    <!-- CALENDAR SECTION -->
+    <div id="calendar" style="margin-top: 20px;">
+        <h3>📅 My Health Calendar</h3>
+        <!-- Calendar content -->
+        <div style="display: flex; gap: 20px; margin-top: 15px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 280px; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                <h4 style="text-align: center; margin-bottom: 15px;">January 2025</h4>
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 600; color: #64748b; margin-bottom: 10px; font-size: 0.85rem;">
+                    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 14px;">
+                    <div></div><div></div><div></div>
+                    <div style="background: #dbeafe; border-radius: 4px; padding: 4px;">1</div>
+                    <div>2</div><div>3</div><div>4</div>
+                    <div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div>
+                    <div>12</div><div>13</div><div>14</div>
+                    <div style="background: #dcfce7; border-radius: 4px; padding: 4px; color: #166534;">15</div>
+                    <div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div>
+                    <div>22</div><div>23</div><div>24</div><div>25</div><div>26</div><div>27</div><div>28</div>
+                    <div>29</div><div>30</div><div>31</div>
+                </div>
+            </div>
+
+            <div style="flex: 1; min-width: 280px;">
+                <h4>Upcoming Appointments</h4>
+                {% if appointments %}
+                    {% for appt in appointments %}
+                    <div style="background: #f0f9ff; border-left: 4px solid #3498db; padding: 16px; border-radius: 10px; margin-bottom: 12px;">
+                        <p><strong>👨‍⚕️ Dr. {{ appt.doctor_name }}</strong></p>
+                        <p>📆 {{ appt.visit_date }} at {{ appt.visit_time }}</p>
+                        <p>✅ {{ appt.status }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: #64748b;">No appointments.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- VITALS SECTION -->
+    <div id="vitals" style="margin-top: 20px; display: none;">
+        <h3>❤️ Real-Time Vitals Monitoring</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 15px;">
+            <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; text-align: center; border-left: 4px solid #10b981;">
+                <h4>Heart Rate</h4>
+                <p style="font-size: 2rem; font-weight: 700; color: #065f46;">72 <span style="font-size: 1rem;">bpm</span></p>
+            </div>
+            <div style="background: #f0f9ff; padding: 20px; border-radius: 12px; text-align: center; border-left: 4px solid #3498db;">
+                <h4>SpO₂</h4>
+                <p style="font-size: 2rem; font-weight: 700; color: #1e40af;">98 <span style="font-size: 1rem;">%</span></p>
+            </div>
+            <div style="background: #fef3c7; padding: 20px; border-radius: 12px; text-align: center; border-left: 4px solid #d97706;">
+                <h4>Body Temp</h4>
+                <p style="font-size: 2rem; font-weight: 700; color: #9a3412;">36.6 <span style="font-size: 1rem;">°C</span></p>
+            </div>
+            <div style="background: #f0fdf4; padding: 20px; border-radius: 12px; text-align: center; border-left: 4px solid #10b981;">
+                <h4>Fall Detection</h4>
+                <p style="font-size: 1.2rem; font-weight: 600; color: #065f46;">✅ Normal</p>
+            </div>
+        </div>
+        <p style="margin-top: 20px; color: #64748b;"><em>Data updates in real-time from your Smart Health Band.</em></p>
+    </div>
+
+    <!-- REMINDERS SECTION -->
+    <div id="reminders" style="margin-top: 20px; display: none;">
+        <h3>🔔 Health Reminders</h3>
+        <ul style="padding-left: 20px; line-height: 1.8; margin-top: 15px;">
+            <li>✅ Take medication at 8:00 AM</li>
+            <li>🔄 Sync your Smart Health Band daily</li>
+            <li>❤️ Monitor your heart rate and SpO₂</li>
+            <li>📅 Attend your scheduled medical revisits</li>
+        </ul>
+    </div>
+
+    <!-- SIMPLE SHOW/HIDE WITH PURE CSS (NO JS) -->
+    <style>
+    :target {
+        display: block !important;
+    }
+    #calendar {
+        display: block;
+    }
+    </style>
+{% endif %}
+
+{% endblock %}

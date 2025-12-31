@@ -1,0 +1,7 @@
+<!-- web/templates/home.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome to Smart Health Monitoring</h2>
+<p>Track your heart rate, body temperature, falls, and more — with AI-powered insights and emergency alerts.</p>
+<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+{% endblock %}
