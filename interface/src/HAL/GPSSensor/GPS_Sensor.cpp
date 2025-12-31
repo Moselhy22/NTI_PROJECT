@@ -1,103 +1,65 @@
 #include "GPS_Sensor.h"
-#include "../../MCAL/UART_Driver/UART_Driver.h"
+#include <Arduino.h>
 
-GPSSensor gpsSensor;
+/* ================= Objects ================= */
+static TinyGPSPlus gps;
+static HardwareSerial gpsSerial(2);
 
-GPSSensor::GPSSensor() : initialized(false), gpsSerial(nullptr), lastValidFix(0), status(SENSOR_NOT_CONNECTED) {}
-
-bool GPSSensor::init(uint8_t uart_num, uint32_t baud_rate, uint8_t rx_pin, uint8_t tx_pin) {
-    // Initialize UART for GPS
-    if (!UART_Driver::begin(uart_num, baud_rate, rx_pin, tx_pin)) {
-        status = SENSOR_ERROR;
-        return false;
-    }
+/* ================= Init ================= */
+void GPS_Init(void)
+{
+    gpsSerial.begin(9600, SERIAL_8N1, GPS_RX, GPS_TX);
+    Serial.println("Waiting for GPS signal...");
     
-    initialized = true;
-    status = SENSOR_OK;
-    Serial.println("GPS Sensor Initialized");
-    return true;
 }
 
-void GPSSensor::update(void) {
-    if (!initialized) return;
-    
-    // Read from GPS UART (UART2)
-    while (UART_Driver::available(2)) {
-        char c = UART_Driver::read(2);
-        gps.encode(c);
-    }
-    
-    if (gps.location.isValid()) {
-        lastValidFix = millis();
+/* ================= Update ================= */
+void GPS_Update(void)
+{
+    while (gpsSerial.available())
+    {
+        gps.encode(gpsSerial.read());
     }
 }
 
-bool GPSSensor::read(float* latitude, float* longitude) {
-    update();
-    
-    if (gps.location.isValid()) {
-        *latitude = gps.location.lat();
-        *longitude = gps.location.lng();
-        return true;
-    }
-    
-    // Return last known position if recent
-    if (gps.location.isValid() && (millis() - lastValidFix < 30000)) { // 30 seconds
-        *latitude = gps.location.lat();
-        *longitude = gps.location.lng();
-        return true;
-    }
-    
-    return false;
-}
-
-bool GPSSensor::isFixed(void) {
-    update();
+/* ================= Data Access ================= */
+bool GPS_IsLocationUpdated(void)
+{
     return gps.location.isValid();
 }
 
-int GPSSensor::getSatellites(void) {
-    update();
+
+double GPS_GetLatitude(void)
+{
+    return gps.location.lat();
+}
+
+double GPS_GetLongitude(void)
+{
+    return gps.location.lng();
+}
+
+uint32_t GPS_GetSatellites(void)
+{
     return gps.satellites.value();
 }
 
-float GPSSensor::getSpeed(void) {
-    update();
-    return gps.speed.kmph();
+uint32_t GPS_GetHDOP(void)
+{
+    return gps.hdop.value();
 }
 
-float GPSSensor::getAltitude(void) {
-    update();
-    return gps.altitude.meters();
+uint8_t GPS_GetHour(void)
+{
+    return gps.time.hour();
 }
 
-Sensor_Status_t GPSSensor::getStatus(void) {
-    update();
-    
-    if (!initialized) return SENSOR_NOT_CONNECTED;
-    
-    if (gps.location.isValid()) {
-        return SENSOR_OK;
-    } else if (gps.satellites.value() > 0) {
-        return SENSOR_CALIBRATING;
-    } else {
-        return SENSOR_ERROR;
-    }
+uint8_t GPS_GetMinute(void)
+{
+    return gps.time.minute();
 }
 
-// C-style interface
-void GPS_Init(void) {
-    gpsSensor.init();
-}
-
-bool GPS_Read(float* latitude, float* longitude) {
-    return gpsSensor.read(latitude, longitude);
-}
-
-Sensor_Status_t GPS_GetStatus(void) {
-    return gpsSensor.getStatus();
-}
-
-int GPS_GetSatellites(void) {
-    return gpsSensor.getSatellites();
+uint8_t GPS_GetSecond(void)
+{
+    return gps.time.second();
 }

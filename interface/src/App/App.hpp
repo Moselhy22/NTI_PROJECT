@@ -64,13 +64,16 @@ extern HealthData_t currentHealthData;
 #include "../HAL/HeartRateSensor/HeartRateSensor.h"
 #include "../MQTTClient/MqttClient.hpp"
 #include "../MCAL/I2C_Driver/I2C_Driver.h"
+#include <WiFi.h>
 // Node info
-#define MQTT_CLIENT_ID  "HealthMonitor_01"
-#define NODE_ID         "HealthMonitor_01"
+#define MQTT_CLIENT_ID    "HealthMonitor_01"
+#define NODE_ID           "HealthMonitor_01"
 #define SUBSCRIBE_TOPIC_NODE_ID "SubHealthMonitor_01"
 
-// Hardware
+
+
 #define LED_PIN 23
+
 
 // Task intervals (ms)
 #define TASK_100MS_INTERVAL 100
