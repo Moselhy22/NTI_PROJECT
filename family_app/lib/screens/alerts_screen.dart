@@ -4,17 +4,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class AlertsScreen extends StatefulWidget {
   const AlertsScreen({super.key});
 
-  // مصفوفة ثابتة لتخزين التنبيهات لكي لا تضيع عند التنقل بين الشاشات
   static List<Map<String, String>> emergencyHistory = [];
 
-  // الدالة يجب أن تكون static لكي يتم استدعاؤها من أي مكان بدون إنشاء نسخة من الكلاس
-  static void addAlert(String message, LatLng location) {
-    emergencyHistory.insert(0, {
-      'time': DateTime.now().toString().substring(11, 16), // عرض الساعة والدقيقة فقط
-      'event': message,
-      'location': "${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}"
-    });
-  }
+ static void addAlert(String message, LatLng location) {
+  final now = DateTime.now();
+  final String formattedTime = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+
+  emergencyHistory.insert(0, {
+    'time': formattedTime,
+    'event': message,
+    'location': "${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}"
+  });
+}
+  
 
   @override
   State<AlertsScreen> createState() => _AlertsScreenState();

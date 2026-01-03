@@ -16,7 +16,7 @@ final double heartRate;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA), // Light professional background
+      backgroundColor: const Color(0xFFF5F7FA), 
       appBar: AppBar(
         title: const Text("Patient Health Dashboard", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.transparent,
@@ -31,32 +31,48 @@ final double heartRate;
             const Text("Vital Signs", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 15),
             
-            // Grid for Heart Rate, Temperature, and SpO2
-            GridView.count(
-              shrinkWrap: true, // Required to use GridView inside SingleChildScrollView
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.1,
-              children: const [
-                VitalCard(title: "Heart Rate", value: "82", unit: " bpm", icon: Icons.favorite, color: Colors.red),
-                VitalCard(title: "Temperature", value: "36.8", unit: " °C", icon: Icons.thermostat, color: Colors.orange),
-                VitalCard(title: "SpO2", value: "99", unit: " %", icon: Icons.water_drop, color: Colors.blue),
-                VitalCard(title: "System Status", value: "Active", unit: "", icon: Icons.wifi, color: Colors.teal),
-              ],
-            ),
+          GridView.count(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  crossAxisCount: 2,
+  crossAxisSpacing: 12,
+  mainAxisSpacing: 12,
+  childAspectRatio: 1.1,
+  children: [
+    VitalCard(
+      title: "Heart Rate",
+      value: heartRate.toStringAsFixed(0), 
+      unit: " bpm",
+      icon: Icons.favorite,
+      color: (heartRate > 100 || heartRate < 60) ? Colors.red : Colors.green,
+    ),
+    VitalCard(
+      title: "Temperature",
+      value: temperature.toStringAsFixed(1), // عرض رقم عشري واحد
+      unit: " °C",
+      icon: Icons.thermostat,
+      color: (temperature > 37.5 || temperature < 35.0) ? Colors.orange : Colors.blue,
+    ),
+    // يمكنك استغلال الكروت الباقية لعرض حالة النظام أو سكور الـ AI
+    VitalCard(
+      title: "Movement",
+      value: mpuStatus == 1 ? "Moving" : "Still",
+      unit: "",
+      icon: Icons.directions_run,
+      color: Colors.purple,
+    ),
+    const VitalCard(title: "System", value: "Online", unit: "", icon: Icons.cloud_done, color: Colors.teal),
+  ],
+),
             
             const SizedBox(height: 25),
             const Text("Movement (MPU6050)", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 15),
 
-            // Wide Card for MPU Data (Accelerometer/Gyroscope)
-            _buildMPUCard(x: "0.02", y: "1.10", z: "-0.98"),
+         //   _buildMPUCard(x: "0.02", y: "1.10", z: "-0.98"),
             
             const SizedBox(height: 20),
             
-            // Patient Status Card (Summary)
             _buildStatusSummaryCard(status: "Stable", lastUpdate: "2 mins ago"),
           ],
         ),
@@ -64,38 +80,45 @@ final double heartRate;
     );
   }
 
-  // Specialized UI for MPU Sensor data
-  Widget _buildMPUCard({required String x, required String y, required String z}) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _axisIndicator("X-Axis", x, Colors.purple),
-              _axisIndicator("Y-Axis", y, Colors.indigo),
-              _axisIndicator("Z-Axis", z, Colors.blueGrey),
-            ],
-          ),
-          const Divider(height: 30),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.directions_walk, color: Colors.grey),
-              SizedBox(width: 8),
-              Text("Current Activity: Standing", style: TextStyle(fontWeight: FontWeight.w500)),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+ Widget _buildMPUCard() {
+  bool isFallen = mpuStatus == 1; // نفترض أن 1 تعني اكتشاف سقوط أو حركة مفاجئة
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: isFallen ? Colors.red.shade50 : Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      border: isFallen ? Border.all(color: Colors.red, width: 2) : null,
+      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+    ),
+    child: Row(
+      children: [
+        Icon(
+          isFallen ? Icons.warning_rounded : Icons.accessibility_new,
+          size: 40,
+          color: isFallen ? Colors.red : Colors.green,
+        ),
+        const SizedBox(width: 20),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              isFallen ? "FALL DETECTED!" : "Patient Status",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isFallen ? Colors.red : Colors.black87,
+              ),
+            ),
+            Text(
+              isFallen ? "Emergency alert sent" : "Normal movement pattern",
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _axisIndicator(String label, String value, Color color) {
     return Column(
