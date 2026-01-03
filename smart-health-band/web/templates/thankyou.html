@@ -1,8 +1,19 @@
-<!-- web/templates/thankyou.html -->
 {% extends "base.html" %}
 {% block content %}
-<h2>Thank You! 🎉</h2>
-<p>Thank you for choosing Smart Health Band.</p>
-<p>Your information has been securely saved. Our team will contact you soon.</p>
-<a href="/" class="btn">← Back to Home</a>
+
+<h2>🎉 {{ 'شكراً لك!' if session.get('lang') == 'ar' else 'Thank You!' }}</h2>
+<p>{{ 'شكراً لاختيارك سوار الصحة الذكي.' if session.get('lang') == 'ar' else 'Thank you for choosing Smart Health Band.' }}</p>
+<p>{{ 'تم حفظ معلوماتك بشكل آمن. سيتواصل معك فريقنا قريباً.' if session.get('lang') == 'ar' else 'Your information has been securely saved. Our team will contact you soon.' }}</p>
+<a href="/" class="btn">← {{ 'العودة إلى الرئيسية' if session.get('lang') == 'ar' else 'Back to Home' }}</a>
+
+<style>
+{% if session.get('lang') == 'ar' %}
+body { direction: rtl; text-align: right; }
+h2, p { font-family: 'Tajawal', sans-serif; }
+.btn { 
+    direction: rtl; 
+    margin-{{ 'left' if session.get('lang') == 'ar' else 'right' }}: auto;
+}
+{% endif %}
+</style>
 {% endblock %}

@@ -1,8 +1,16 @@
-<!-- web/templates/contact.html -->
 {% extends "base.html" %}
 {% block content %}
-<h2>Contact Us</h2>
-<p>Email: support@healthband.local</p>
-<p>Phone: +20 XXX XXX XXXX</p>
-<p>Address: Cairo, Egypt</p>
+
+<h2>{{ 'اتصل بنا' if session.get('lang') == 'ar' else 'Contact Us' }}</h2>
+<p>{{ 'البريد الإلكتروني:' if session.get('lang') == 'ar' else 'Email:' }} support@healthband.local</p>
+<p>{{ 'الهاتف:' if session.get('lang') == 'ar' else 'Phone:' }} +20 XXX XXX XXXX</p>
+<p>{{ 'العنوان:' if session.get('lang') == 'ar' else 'Address:' }} {{ 'القاهرة، مصر' if session.get('lang') == 'ar' else 'Cairo, Egypt' }}</p>
+
+<style>
+{% if session.get('lang') == 'ar' %}
+body { direction: rtl; text-align: right; }
+h2 { font-family: 'Tajawal', sans-serif; }
+p { font-family: 'Tajawal', sans-serif; }
+{% endif %}
+</style>
 {% endblock %}

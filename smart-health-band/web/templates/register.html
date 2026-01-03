@@ -1,37 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Register with Smart Health Band</h2>
+
+<h2>{{ 'التسجيل في سوار الصحة الذكي' if session.get('lang') == 'ar' else 'Register with Smart Health Band' }}</h2>
 <form method="POST" id="registrationForm">
-    <label for="name">Full Name *</label>
-    <input type="text" id="name" name="name" required>
-    <label for="username">Username *</label>
-<input type="text" id="username" name="username" required minlength="3" placeholder="Choose a unique username">
+    <label for="name">{{ 'الاسم الكامل *' if session.get('lang') == 'ar' else 'Full Name *' }}</label>
+    <input type="text" id="name" name="name" required {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}>
 
-<label>User Type *</label>
-<div style="display: flex; gap: 15px; margin: 10px 0;">
-    <label style="display: flex; align-items: center; gap: 6px;">
-        <input type="radio" name="user_type" value="patient" checked> Patient
-    </label>
-    <label style="display: flex; align-items: center; gap: 6px;">
-        <input type="radio" name="user_type" value="doctor"> Doctor
-    </label>
-</div>
+    <label for="username">{{ 'اسم المستخدم *' if session.get('lang') == 'ar' else 'Username *' }}</label>
+    <input type="text" id="username" name="username" required minlength="3" placeholder="{{ 'اختر اسماً فريداً' if session.get('lang') == 'ar' else 'Choose a unique username' }}" {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}>
 
-    <label for="email">Email Address *</label>
-    <input type="email" id="email" name="email" required placeholder="you@example.com">
+    <label>{{ 'نوع المستخدم *' if session.get('lang') == 'ar' else 'User Type *' }}</label>
+    <div style="display: flex; gap: 15px; margin: 10px 0; {{ 'flex-direction: row-reverse;' if session.get('lang') == 'ar' else '' }}">
+        <label style="display: flex; align-items: center; gap: 6px; {{ 'flex-direction: row-reverse;' if session.get('lang') == 'ar' else '' }}">
+            <input type="radio" name="user_type" value="patient" checked> {{ 'مريض' if session.get('lang') == 'ar' else 'Patient' }}
+        </label>
+        <label style="display: flex; align-items: center; gap: 6px; {{ 'flex-direction: row-reverse;' if session.get('lang') == 'ar' else '' }}">
+            <input type="radio" name="user_type" value="doctor"> {{ 'طبيب' if session.get('lang') == 'ar' else 'Doctor' }}
+        </label>
+    </div>
 
-    <label for="password">Password *</label>
+    <label for="email">{{ 'عنوان البريد الإلكتروني *' if session.get('lang') == 'ar' else 'Email Address *' }}</label>
+    <input type="email" id="email" name="email" required placeholder="{{ 'you@example.com' if session.get('lang') == 'ar' else 'you@example.com' }}" {{ 'dir="ltr"' if session.get('lang') == 'ar' else '' }}>
+
+    <label for="password">{{ 'كلمة المرور *' if session.get('lang') == 'ar' else 'Password *' }}</label>
     <div class="password-wrapper">
-        <input type="password" id="password" name="password" required minlength="6" placeholder="At least 6 characters">
+        <input type="password" id="password" name="password" required minlength="6" placeholder="{{ 'على الأقل 6 أحرف' if session.get('lang') == 'ar' else 'At least 6 characters' }}" {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}>
         <button type="button" class="password-toggle-btn" id="togglePassword">👁️</button>
     </div>
 
-    <label for="address">Home Address *</label>
-    <textarea id="address" name="address" rows="3" required></textarea>
+    <label for="address">{{ 'عنوان المنزل *' if session.get('lang') == 'ar' else 'Home Address *' }}</label>
+    <textarea id="address" name="address" rows="3" required {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}></textarea>
 
-    <label for="country">Country & Dialing Code *</label>
-    <select id="country" name="country" required>
-        <option value="">-- Select Country --</option>
+    <label for="country">{{ 'الدولة ورمز الاتصال *' if session.get('lang') == 'ar' else 'Country & Dialing Code *' }}</label>
+    <select id="country" name="country" required {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}>
+        <option value="">{{ '-- اختر الدولة --' if session.get('lang') == 'ar' else '-- Select Country --' }}</option>
         <option value="Afghanistan (+93)">🇦🇫 Afghanistan (+93)</option>
         <option value="Albania (+355)">🇦🇱 Albania (+355)</option>
         <option value="Algeria (+213)">🇩🇿 Algeria (+213)</option>
@@ -271,31 +273,31 @@
         <option value="Western Sahara (+212)">🇪🇭 Western Sahara (+212)</option>
         <option value="Yemen (+967)">🇾🇪 Yemen (+967)</option>
         <option value="Zambia (+260)">🇿🇲 Zambia (+260)</option>
-        <option value="Zimbabwe (+263)">🇿imbabwe (+263)</option>
+        <option value="Zimbabwe (+263)">🇿🇼 Zimbabwe (+263)</option>
     </select>
 
-    <label for="phone">Phone Number (without country code) *</label>
-    <input type="tel" id="phone" name="phone" required placeholder="e.g., 1234567890">
+    <label for="phone">{{ 'رقم الهاتف (بدون رمز الدولة) *' if session.get('lang') == 'ar' else 'Phone Number (without country code) *' }}</label>
+    <input type="tel" id="phone" name="phone" required placeholder="{{ 'مثال: 1234567890' if session.get('lang') == 'ar' else 'e.g., 1234567890' }}" {{ 'dir="ltr"' if session.get('lang') == 'ar' else '' }}>
 
-    <label for="emergency_contact">Emergency Contact (full number with country code) *</label>
-    <input type="tel" id="emergency_contact" name="emergency_contact" required placeholder="+201234567890">
+    <label for="emergency_contact">{{ 'جهة الاتصال الطارئة (الرقم الكامل مع رمز الدولة) *' if session.get('lang') == 'ar' else 'Emergency Contact (full number with country code) *' }}</label>
+    <input type="tel" id="emergency_contact" name="emergency_contact" required placeholder="{{ '+201234567890' if session.get('lang') == 'ar' else '+201234567890' }}" {{ 'dir="ltr"' if session.get('lang') == 'ar' else '' }}>
 
     <!-- MEDICAL CONDITIONS — SCROLLABLE DROPDOWN -->
-    <label for="medical_conditions">Medical Conditions:</label>
-    <select id="medical_conditions" name="medical_conditions" multiple required style="height: 120px;">
-        <option value="None">None</option>
-        <option value="Diabetes">Diabetes</option>
-        <option value="Heart Disease">Heart Disease</option>
-        <option value="Epilepsy">Epilepsy</option>
-        <option value="Down Syndrome">Down Syndrome</option>
-        <option value="Asthma">Asthma</option>
-        <option value="Hypertension">Hypertension</option>
-        <option value="Other">Other</option>
+    <label for="medical_conditions">{{ 'الحالات الطبية:' if session.get('lang') == 'ar' else 'Medical Conditions:' }}</label>
+    <select id="medical_conditions" name="medical_conditions" multiple required style="height: 120px; {{ 'direction: rtl;' if session.get('lang') == 'ar' else '' }}">
+        <option value="None">{{ 'لا شيء' if session.get('lang') == 'ar' else 'None' }}</option>
+        <option value="Diabetes">{{ 'السكري' if session.get('lang') == 'ar' else 'Diabetes' }}</option>
+        <option value="Heart Disease">{{ 'أمراض القلب' if session.get('lang') == 'ar' else 'Heart Disease' }}</option>
+        <option value="Epilepsy">{{ 'الصرع' if session.get('lang') == 'ar' else 'Epilepsy' }}</option>
+        <option value="Down Syndrome">{{ 'متلازمة داون' if session.get('lang') == 'ar' else 'Down Syndrome' }}</option>
+        <option value="Asthma">{{ 'الربو' if session.get('lang') == 'ar' else 'Asthma' }}</option>
+        <option value="Hypertension">{{ 'ارتفاع ضغط الدم' if session.get('lang') == 'ar' else 'Hypertension' }}</option>
+        <option value="Other">{{ 'أخرى' if session.get('lang') == 'ar' else 'Other' }}</option>
     </select>
 
-    <input type="text" id="other-condition-input" name="other_condition" placeholder="Please specify..." style="display: none; margin-top: 10px;">
+    <input type="text" id="other-condition-input" name="other_condition" placeholder="{{ 'يرجى التحديد...' if session.get('lang') == 'ar' else 'Please specify...' }}" style="display: none; margin-top: 10px;" {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}>
 
-    <button type="submit">✅ Create Account</button>
+    <button type="submit">✅ {{ 'إنشاء حساب' if session.get('lang') == 'ar' else 'Create Account' }}</button>
 </form>
 
 <script>
@@ -311,14 +313,13 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     }
 });
 
-// Medical conditions logic for <select multiple>
+// Medical conditions logic
 const medicalSelect = document.getElementById('medical_conditions');
 const otherInput = document.getElementById('other-condition-input');
 
 medicalSelect.addEventListener('change', function() {
     const selected = Array.from(this.selectedOptions).map(opt => opt.value);
     
-    // If "None" is selected, deselect all others
     if (selected.includes('None')) {
         for (let i = 0; i < this.options.length; i++) {
             this.options[i].selected = (this.options[i].value === 'None');
@@ -326,7 +327,6 @@ medicalSelect.addEventListener('change', function() {
         otherInput.style.display = 'none';
         otherInput.removeAttribute('required');
     } 
-    // If "Other" is selected, show input
     else if (selected.includes('Other')) {
         otherInput.style.display = 'block';
         otherInput.setAttribute('required', 'required');
@@ -337,4 +337,13 @@ medicalSelect.addEventListener('change', function() {
     }
 });
 </script>
+
+<style>
+{% if session.get('lang') == 'ar' %}
+body { direction: rtl; text-align: right; }
+h2, label, .password-wrapper input, textarea, select {
+    font-family: 'Tajawal', sans-serif;
+}
+</style>
+{% endif %}
 {% endblock %}

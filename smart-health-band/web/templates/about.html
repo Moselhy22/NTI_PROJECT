@@ -1,26 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>🌟 About Smart Health Band</h2>
-<p>We're building the future of personal health monitoring with AI, IoT, and real-time alerts.</p>
+
+<h2>🌟 {{ 'عن سوار الصحة الذكي' if session.get('lang') == 'ar' else 'About Smart Health Band' }}</h2>
+<p>{{ 'نحن نبني مستقبل مراقبة الصحة الشخصية باستخدام الذكاء الاصطناعي، إنترنت الأشياء، والتنبيهات الفورية.' if session.get('lang') == 'ar' else 'We\'re building the future of personal health monitoring with AI, IoT, and real-time alerts.' }}</p>
 
 <div class="section">
-    <h3>🚀 Our Mission</h3>
-    <p>To empower individuals with intelligent, proactive health insights — especially for epilepsy, Down syndrome, and elderly care.</p>
+    <h3>🚀 {{ 'مهمتنا' if session.get('lang') == 'ar' else 'Our Mission' }}</h3>
+    <p>{{ 'تمكين الأفراد برؤى صحية ذكية واستباقية — خاصة لمرضى الصرع، متلازمة داون، ورعاية كبار السن.' if session.get('lang') == 'ar' else 'To empower individuals with intelligent, proactive health insights — especially for epilepsy, Down syndrome, and elderly care.' }}</p>
 </div>
 
 <div class="section">
-    <h3>🧠 AI-Powered Detection</h3>
-    <p>Our models classify vitals into: Stable, Pre-Seizure, Seizure — with 94%+ accuracy on CHB-MIT dataset.</p>
+    <h3>🧠 {{ 'كشف مدعوم بالذكاء الاصطناعي' if session.get('lang') == 'ar' else 'AI-Powered Detection' }}</h3>
+    <p>{{ 'تصنّف نماذجنا المؤشرات الحيوية إلى: مستقر، قبل النوبة، نوبة — بدقة تفوق 94% على مجموعة بيانات CHB-MIT.' if session.get('lang') == 'ar' else 'Our models classify vitals into: Stable, Pre-Seizure, Seizure — with 94%+ accuracy on CHB-MIT dataset.' }}</p>
 </div>
 
 <div class="section">
-    <h3>📡 Real-Time Alerts</h3>
-    <p>Fall detection? High fever? GPS location sent instantly to emergency contacts.</p>
+    <h3>📡 {{ 'تنبيهات فورية' if session.get('lang') == 'ar' else 'Real-Time Alerts' }}</h3>
+    <p>{{ 'اكتشاف سقوط؟ حمى عالية؟ يتم إرسال الموقع عبر GPS فوراً إلى جهات الاتصال الطارئة.' if session.get('lang') == 'ar' else 'Fall detection? High fever? GPS location sent instantly to emergency contacts.' }}</p>
 </div>
 
 <div class="section">
-    <h3>👩‍⚕️ Doctor Integration</h3>
-    <p>Doctors access patient dashboards, schedule revisits, and monitor trends over time.</p>
+    <h3>👩‍⚕️ {{ 'تكامل مع الأطباء' if session.get('lang') == 'ar' else 'Doctor Integration' }}</h3>
+    <p>{{ 'يصل الأطباء إلى لوحات تحكم المرضى، يجدولون الزيارات، ويراقبون الاتجاهات بمرور الوقت.' if session.get('lang') == 'ar' else 'Doctors access patient dashboards, schedule revisits, and monitor trends over time.' }}</p>
 </div>
 
 <style>
@@ -29,11 +30,13 @@
     padding: 1.5rem;
     background: #f8fafc;
     border-radius: 14px;
-    border-left: 3px solid #3498db;
+    border-{{ 'right' if session.get('lang') == 'ar' else 'left' }}: 3px solid #3498db;
+    {{ 'direction: rtl; text-align: right;' if session.get('lang') == 'ar' else '' }}
 }
 .section h3 {
     color: #1e293b;
     margin-bottom: 12px;
+    {{ 'font-family: \'Tajawal\', sans-serif;' if session.get('lang') == 'ar' else '' }}
 }
 </style>
 {% endblock %}

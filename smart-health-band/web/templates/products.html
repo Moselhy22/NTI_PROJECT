@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Our Smart Health Products</h2>
+
+<h2>{{ 'منتجاتنا الصحية الذكية' if session.get('lang') == 'ar' else 'Our Smart Health Products' }}</h2>
 <div class="product-grid">
     {% for product in products %}
     <div class="product-card">
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
-        <p><strong>${{ "%.2f"|format(product.price|float) }}</strong></p>
+        <p><strong>{{ 'ل.س' if session.get('lang') == 'ar' else '$' }}{{ "%.2f"|format(product.price|float) }}</strong></p>
         <button class="add-to-cart" 
                 data-id="{{ product.id }}"
                 data-name="{{ product.name }}"
                 data-price="{{ product.price }}">
-            Add to Cart
+            {{ 'إضافة إلى السلة' if session.get('lang') == 'ar' else 'Add to Cart' }}
         </button>
     </div>
     {% endfor %}
@@ -27,8 +28,16 @@ document.querySelectorAll('.add-to-cart').forEach(btn => {
             price: parseFloat(btn.dataset.price)
         });
         localStorage.setItem('healthband-cart', JSON.stringify(cart));
-        alert('Added to cart!');
+        alert('{{ 'تمت الإضافة إلى السلة!' if session.get('lang') == 'ar' else 'Added to cart!' }}');
     });
 });
 </script>
+
+<style>
+{% if session.get('lang') == 'ar' %}
+body { direction: rtl; text-align: right; }
+h2 { font-family: 'Tajawal', sans-serif; }
+.product-card h3, .product-card p { font-family: 'Tajawal', sans-serif; }
+{% endif %}
+</style>
 {% endblock %}

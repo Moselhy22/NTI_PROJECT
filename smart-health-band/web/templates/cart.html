@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>🛒 Your Shopping Cart</h2>
-<div id="cart-items">Loading...</div>
+
+<h2>🛒 {{ 'سلة التسوق الخاصة بك' if session.get('lang') == 'ar' else 'Your Shopping Cart' }}</h2>
+<div id="cart-items">{{ 'جارٍ التحميل...' if session.get('lang') == 'ar' else 'Loading...' }}</div>
 <div id="cart-total" style="margin-top:20px; font-size:1.2em; font-weight:bold;"></div>
-<button id="checkout-btn" style="margin-top:20px; display:none;">💳 Proceed to Checkout</button>
+<button id="checkout-btn" style="margin-top:20px; display:none;">💳 {{ 'الانتقال إلى الدفع' if session.get('lang') == 'ar' else 'Proceed to Checkout' }}</button>
 
 <script>
 function updateCart() {
@@ -13,19 +14,19 @@ function updateCart() {
     const checkoutBtn = document.getElementById('checkout-btn');
 
     if (cart.length === 0) {
-        itemsDiv.innerHTML = '<p>Your cart is empty. <a href="/products">Browse products</a></p>';
+        itemsDiv.innerHTML = `<p>${`{{ 'سلة التسوق فارغة. ' if session.get('lang') == 'ar' else 'Your cart is empty. ' }}`} <a href="/products">${`{{ 'تصفح المنتجات' if session.get('lang') == 'ar' else 'Browse products' }}`}</a></p>`;
         totalDiv.textContent = '';
         checkoutBtn.style.display = 'none';
     } else {
         let html = '<ul>';
         cart.forEach((item, i) => {
-            html += `<li>${item.name} - $${item.price.toFixed(2)}
-                     <button class="remove-btn" data-index="${i}" style="margin-left:10px; color:#e74c3c;">Remove</button></li>`;
+            html += `<li>${`{{ 'ل.س' if session.get('lang') == 'ar' else '$' }}`}${item.price.toFixed(2)} - ${item.name}
+                     <button class="remove-btn" data-index="${i}" style="margin-{{ 'right' if session.get('lang') == 'ar' else 'left' }}:10px; color:#e74c3c;">${`{{ 'إزالة' if session.get('lang') == 'ar' else 'Remove' }}`}</button></li>`;
         });
         html += '</ul>';
         itemsDiv.innerHTML = html;
         const total = cart.reduce((sum, item) => sum + item.price, 0);
-        totalDiv.textContent = `Total: $${total.toFixed(2)}`;
+        totalDiv.textContent = `${`{{ 'الإجمالي: ' if session.get('lang') == 'ar' else 'Total: ' }}`}${`{{ 'ل.س' if session.get('lang') == 'ar' else '$' }}`}${total.toFixed(2)}`;
         checkoutBtn.style.display = 'block';
 
         document.querySelectorAll('.remove-btn').forEach(btn => {
@@ -40,7 +41,7 @@ function updateCart() {
 }
 
 document.getElementById('checkout-btn')?.addEventListener('click', () => {
-    alert('✅ Order placed! (Demo mode)');
+    alert(`${`{{ '✅ تم تقديم الطلب! (وضع العرض التوضيحي)' if session.get('lang') == 'ar' else '✅ Order placed! (Demo mode)' }}`}`);
     localStorage.removeItem('healthband-cart');
     updateCart();
 });

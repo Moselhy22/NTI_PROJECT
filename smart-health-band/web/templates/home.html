@@ -1,7 +1,17 @@
-<!-- web/templates/home.html -->
 {% extends "base.html" %}
 {% block content %}
-<h2>Welcome to Smart Health Monitoring</h2>
-<p>Track your heart rate, body temperature, falls, and more — with AI-powered insights and emergency alerts.</p>
-<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+
+<h2>{{ 'مرحباً بك في نظام مراقبة الصحة الذكي' if session.get('lang') == 'ar' else 'Welcome to Smart Health Monitoring' }}</h2>
+<p>{{ 'تابع معدل ضربات قلبك، درجة حرارة جسمك، السقوط، و المزيد — مع رؤى مدعومة بالذكاء الاصطناعي وتنبيهات طوارئ فورية.' if session.get('lang') == 'ar' else 'Track your heart rate, body temperature, falls, and more — with AI-powered insights and emergency alerts.' }}</p>
+<img src="{{ url_for('static', filename='images/logo.png') }}" alt="{{ 'الشعار' if session.get('lang') == 'ar' else 'Logo' }}" class="logo">
+
+<style>
+{% if session.get('lang') == 'ar' %}
+h2, p { 
+    font-family: 'Tajawal', sans-serif; 
+    direction: rtl; 
+    text-align: right;
+}
+{% endif %}
+</style>
 {% endblock %}

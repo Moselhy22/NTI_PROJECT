@@ -3,30 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Health Band</title>
+    <title>{{ 'سوار الصحة الذكي' if session.get('lang') == 'ar' else 'Smart Health Band' }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
 </head>
-<body>
+<body class="{{ 'arabic' if session.get('lang') == 'ar' else '' }}">
+    <!-- LOGIN DETECTION FOR CHATBOT -->
+    {% if session.get('logged_in') %}
+    <div data-logged-in="true" style="display: none;"></div>
+    {% endif %}
+    
     <header>
-        <h1>Smart Health Band</h1>
+        <!-- LANGUAGE TOGGLE -->
+        <div style="position: absolute; top: 12px; {{ 'left' if session.get('lang') == 'ar' else 'right' }}: 100px; display: flex; gap: 8px; z-index: 1001;">
+            <button onclick="setLanguage('en')" style="padding: 4px 8px; font-size: 12px; background: {{ '#dbeafe' if session.get('lang') != 'ar' else '#e2e8f0' }}; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">EN</button>
+            <button onclick="setLanguage('ar')" style="padding: 4px 8px; font-size: 12px; background: {{ '#dbeafe' if session.get('lang') == 'ar' else '#e2e8f0' }}; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer;">العربية</button>
+        </div>
+        
+        <h1>{{ 'سوار الصحة الذكي' if session.get('lang') == 'ar' else 'Smart Health Band' }}</h1>
         {% if session.get('logged_in') %}
         <div class="user-info">
-            👤 {{ session.name }} | <a href="/logout" style="color:#3498db;">Logout</a>
+            👤 {{ session.name }} | <a href="/logout" style="color:#3498db;">{{ 'تسجيل الخروج' if session.get('lang') == 'ar' else 'Logout' }}</a>
         </div>
         {% endif %}
         <nav>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/services">Services</a>
-            <a href="/products">Products</a>
-            <a href="/contact">Contact</a>
+            <a href="/">{{ 'الرئيسية' if session.get('lang') == 'ar' else 'Home' }}</a>
+            <a href="/about">{{ 'عن المشروع' if session.get('lang') == 'ar' else 'About' }}</a>
+            <a href="/services">{{ 'الخدمات' if session.get('lang') == 'ar' else 'Services' }}</a>
+            <a href="/products">{{ 'المنتجات' if session.get('lang') == 'ar' else 'Products' }}</a>
+            <a href="/contact">{{ 'اتصل بنا' if session.get('lang') == 'ar' else 'Contact' }}</a>
             {% if not session.get('logged_in') %}
-            <a href="/register">Register</a>
-            <a href="/login">Sign In</a>
+            <a href="/register">{{ 'تسجيل' if session.get('lang') == 'ar' else 'Register' }}</a>
+            <a href="/login">{{ 'تسجيل الدخول' if session.get('lang') == 'ar' else 'Sign In' }}</a>
             {% else %}
-            <a href="/cart">🛒 Cart</a>
-            <a href="/profile">Profile</a>
+            <a href="/cart">🛒 {{ 'السلة' if session.get('lang') == 'ar' else 'Cart' }}</a>
+            <a href="/profile">{{ 'الملف الشخصي' if session.get('lang') == 'ar' else 'Profile' }}</a>
             {% endif %}
         </nav>
     </header>
@@ -36,10 +47,81 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Smart Health Band • AI-Powered Health Monitoring</p>
+        <p>&copy; 2025 {{ 'سوار الصحة الذكي' if session.get('lang') == 'ar' else 'Smart Health Band' }} • {{ 'مراقبة صحية مدعومة بالذكاء الاصطناعي' if session.get('lang') == 'ar' else 'AI-Powered Health Monitoring' }}</p>
     </footer>
 
-    <!-- Scripts -->
+    <!-- CHATBOT FLOATING BUTTON -->
+    <button id="chatbot-toggle" style="
+        position: fixed;
+        bottom: 20px;
+        {{ 'left' if session.get('lang') == 'ar' else 'right' }}: 20px;
+        width: 56px;
+        height: 56px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 1000;
+    ">
+        💬
+    </button>
+
+    <!-- CHATBOT WINDOW -->
+    <div id="chatbot-window" style="
+        position: fixed;
+        bottom: 80px;
+        {{ 'left' if session.get('lang') == 'ar' else 'right' }}: 20px;
+        width: 320px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        z-index: 999;
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+    ">
+        <div style="background: #3498db; color: white; padding: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+            {{ 'مساعد صحي' if session.get('lang') == 'ar' else 'Health Assistant' }}
+            <button id="chatbot-close" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 4px; line-height: 1;">×</button>
+        </div>
+        <div id="chat-messages" style="height: 300px; padding: 12px; overflow-y: auto; background: white; display: flex; flex-direction: column; gap: 8px;">
+            <!-- Messages populated by JS -->
+        </div>
+        <!-- VOICE-ENABLED INPUT -->
+        <div style="padding: 12px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="chat-input" placeholder="{{ 'اضغط الميكروفون وتحدث...' if session.get('lang') == 'ar' else 'Click mic and speak...' }}" 
+                   style="flex: 1; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; 
+                          font-family: {{ "'Tajawal', sans-serif" if session.get('lang') == 'ar' else "'Inter', sans-serif" }}; 
+                          outline: none; font-size: 14px; line-height: 1.4; background: white; height: 36px;">
+            <button id="mic-btn" 
+                    style="background: #94a3b8; width: 36px; height: 36px; border-radius: 50%; 
+                           display: flex; align-items: center; justify-content: center; 
+                           cursor: pointer; border: none; font-size: 16px;">
+                🎤
+            </button>
+            <button id="chat-send" 
+                    style="background: #3498db; color: white; border: none; border-radius: 6px; 
+                           cursor: pointer; font-size: 16px; width: 40px; height: 36px; 
+                           display: flex; align-items: center; justify-content: center; 
+                           font-weight: bold;">↵</button>
+        </div>
+    </div>
+
+    <!-- LANGUAGE SWITCHING SCRIPT -->
+    <script>
+    function setLanguage(lang) {
+        fetch('/set-language', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({lang: lang})
+        }).then(() => {
+            location.reload();
+        });
+    }
+    </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
