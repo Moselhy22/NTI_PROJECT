@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: smart-health-band
+    env: python
+    region: frankfurt        # Or your preferred region
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn web.app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: MQTT_BROKER
+        sync: false
+      - key: MQTT_USERNAME  
+        sync: false
+      - key: MQTT_PASSWORD
+        sync: false
