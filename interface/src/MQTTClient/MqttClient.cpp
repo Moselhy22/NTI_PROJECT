@@ -16,6 +16,7 @@ extern void App_handleNodeMQTTCommandRecived(const char *payload);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+
 // FreeRTOS Queue for MQTT Messages
 QueueHandle_t mqttQueue;
 
@@ -25,7 +26,8 @@ static void connectToNetwork_Wifi(void);
 
 void MqttClient_Init(void)
 {
-    /*===================== Initialize WiFi (Connecting to the Network) =====================*/
+	/*
+    /*===================== Initialize WiFi (Connecting to the Network) =====================
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.println("Connecting to WiFi...");
     delay(1500);
@@ -33,14 +35,16 @@ void MqttClient_Init(void)
     {
         Serial.println("XXXXXXXXXXXXXXX WiFi Failed to Connect >>> Retrying in the Task XXXXXXXXXXXXXXX");
     }
+	
+	
 
-    /* Get and print the MAC address */
+    /* Get and print the MAC address 
     String macAddress = WiFi.macAddress();
     Serial.println("ESP32 MAC Address (Wi-Fi): " + macAddress);
-
+*/
     /*========================= Initialize MQTT =========================*/
     client.setServer(MQTT_SERVER_IP, MQTT_PORT);
-
+client.setBufferSize(10240); // 10 KB buffer for large JSON messages
     /* KeepAlive timer -->>
     1️⃣ On the CLIENT side : If NO activity for 60 seconds, client sends PINGREQ.If broker does NOT reply with PINGRESP within timeout:
         - Client declares disconnect - client.connected() becomes false - You must reconnect manually. 
@@ -286,6 +290,9 @@ bool MqttClient_PublishMessage(const char *topic, const char *value)
     char buffer[64];
     serializeJson(doc, buffer);
     return enqueueMessage(topic, buffer);
+}
+bool MqttClient_IsConnected(void) {
+    return client.connected();
 }
 
 #endif // MQTT_CLIENT_MODULE
