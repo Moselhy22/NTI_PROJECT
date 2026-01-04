@@ -167,3 +167,85 @@ print("\n" + "="*70)
 *   Develop a mobile application or dashboard to visualize real-time health data and alerts.
 *   Explore sleep tracking, stress detection, and other physiological insights.
 *   Implement over-the-air (OTA) updates for the ESP32 firmware.
+
+## Project Components
+
+This project is developed collaboratively across multiple branches, each focusing on different aspects of the system. Below is an overview of all components found in the various branches.
+
+### 1. AI Component (ai/)
+- **Location**: Available in branches Abdelrhman-Sayed, Omar, Yousef, zahra
+- **Description**: Contains the machine learning model and AI-related code for health event detection.
+- **Key Files**: 
+  - Model training and evaluation scripts
+  - TensorFlow Lite model files (e.g., medical_wearable_model.tflite)
+  - Data preprocessing and feature engineering code
+- **Purpose**: Implements the core AI algorithms for detecting falls, seizures, and medical emergencies from sensor data.
+
+### 2. Cloud Component (cloud/)
+- **Location**: Available in branches Abdelrhman-Sayed, Omar, Yousef, zahra
+- **Description**: Handles cloud connectivity, data storage, and remote monitoring.
+- **Key Features**:
+  - MQTT integration for real-time data transmission
+  - Cloud database setup
+  - API endpoints for data access
+- **Purpose**: Enables remote access to health data and alerts via cloud services.
+
+### 3. Interface Component (interface/)
+- **Location**: Available in branches Abdelrhman-Sayed, Omar, Yousef, zahra
+- **Description**: Contains the ESP32 firmware and hardware interface code.
+- **Key Files**:
+  - ESP32.ino: Main Arduino sketch for the wearable device
+  - model_data.h: Header file with model data for TensorFlow Lite Micro
+  - Additional source files in src/ directory
+- **Purpose**: Runs on the ESP32 microcontroller to collect sensor data and perform on-device inference.
+
+### 4. Smart Health Band Web Application (smart-health-band/)
+- **Location**: Branch Omar
+- **Description**: A Flask-based web application for health monitoring dashboard.
+- **Key Features**:
+  - Real-time vitals dashboard
+  - AI-powered health assistant chatbot with multilingual support (Arabic/English)
+  - Voice-enabled interaction (speech-to-text)
+  - Integration with HiveMQ Cloud for real-time data
+  - Emergency detection and alerting
+- **Technologies**: Python Flask, HTML/CSS/JavaScript, MQTT
+- **Purpose**: Provides a user-friendly interface for monitoring health data and interacting with the AI assistant.
+
+### 5. Family App (family_app/)
+- **Location**: Branch zahra
+- **Description**: A Flutter mobile application for family members to monitor the wearer's health.
+- **Key Features**:
+  - Real-time health data viewing
+  - Alert notifications for emergencies
+  - Family member management
+- **Technologies**: Flutter (Dart)
+- **Purpose**: Allows caregivers and family to stay informed about the wearer's health status.
+
+### 6. Grafana Dashboard (Grafana/)
+- **Location**: Branch zahra
+- **Description**: Visualization dashboard for health metrics and analytics.
+- **Key Features**:
+  - Custom dashboards for sensor data
+  - Historical data analysis
+  - Alert configurations
+- **Purpose**: Provides advanced visualization and monitoring capabilities for health data.
+
+## Branch Overview
+- **main**: Contains the comprehensive AI model development notebook and documentation
+- **master**: Similar to main, with additional delivery standards document
+- **Abdelrhman-Sayed**: Focuses on core components (ai/, cloud/, interface/)
+- **Omar**: Includes web application development (smart-health-band/)
+- **Yousef**: Core components development
+- **zahra**: Mobile app and visualization (family_app/, Grafana/)
+- **model**: Model-specific files and optimizations
+
+## Installation and Setup
+1. Clone the repository and checkout the desired branch for specific components.
+2. For AI development: Open model.ipynb in Google Colab or Jupyter.
+3. For ESP32 deployment: Use Arduino IDE to upload ESP32.ino.
+4. For web app: Navigate to smart-health-band/ and run `python web/app.py`.
+5. For mobile app: Open family_app/ in Flutter development environment.
+6. For cloud setup: Configure MQTT brokers and databases as per cloud/ documentation.
+
+## Contributing
+This is a collaborative project with contributions from multiple team members across different branches. Please ensure to merge changes appropriately and maintain documentation consistency.
