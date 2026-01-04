@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>{{ 'تسجيل الدخول إلى حسابك' if session.get('lang') == 'ar' else 'Sign In to Your Account' }}</h2>
+<form method="POST" action="/login">
+    <label for="login">{{ 'البريد الإلكتروني أو اسم المستخدم' if session.get('lang') == 'ar' else 'Email or Username' }}</label>
+    <input type="text" id="login" name="login" required placeholder="{{ 'البريد الإلكتروني أو اسم المستخدم' if session.get('lang') == 'ar' else 'Email or username' }}" {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}>
+
+    <label for="password">{{ 'كلمة المرور' if session.get('lang') == 'ar' else 'Password' }}</label>
+    <div class="password-wrapper">
+        <input type="password" id="password" name="password" required placeholder="{{ 'أدخل كلمة المرور' if session.get('lang') == 'ar' else 'Enter your password' }}" {{ 'dir="rtl"' if session.get('lang') == 'ar' else '' }}>
+        <button type="button" class="password-toggle-btn" id="togglePassword">👁️</button>
+    </div>
+
+    <button type="submit">🔓 {{ 'تسجيل الدخول' if session.get('lang') == 'ar' else 'Sign In' }}</button>
+</form>
+<p>{{ 'ليس لديك حساب؟' if session.get('lang') == 'ar' else "Don't have an account?" }} <a href="/register">{{ 'سجل هنا' if session.get('lang') == 'ar' else 'Register here' }}</a></p>
+
+<script>
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const input = document.getElementById('password');
+    if (input.type === 'password') {
+        input.type = 'text';
+        this.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        this.textContent = '👁️';
+    }
+});
+</script>
+
+<style>
+{% if session.get('lang') == 'ar' %}
+body { direction: rtl; text-align: right; }
+h2 { font-family: 'Tajawal', sans-serif; }
+label { font-family: 'Tajawal', sans-serif; }
+</style>
+{% endif %}
+{% endblock %}

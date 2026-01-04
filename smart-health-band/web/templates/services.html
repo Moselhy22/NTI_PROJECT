@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>{{ 'خدماتنا' if session.get('lang') == 'ar' else 'Our Services' }}</h2>
+<ul style="{{ 'direction: rtl; text-align: right;' if session.get('lang') == 'ar' else '' }} font-family: {{ "'Tajawal', sans-serif" if session.get('lang') == 'ar' else "'Inter', sans-serif" }};">
+    <li>✅ {{ 'مراقبة معدل ضربات القلب وتشبع الأكسجين في الوقت الحقيقي' if session.get('lang') == 'ar' else 'Real-time heart rate & SpO₂ monitoring' }}</li>
+    <li>✅ {{ 'تتبع درجة حرارة الجسم' if session.get('lang') == 'ar' else 'Body temperature tracking' }}</li>
+    <li>✅ {{ 'كشف السقوط مع تنبيه موقع GPS' if session.get('lang') == 'ar' else 'Fall detection with GPS location alert' }}</li>
+    <li>✅ {{ 'تنبؤ بنوبات الصرع (قبل النوبة / النوبة)' if session.get('lang') == 'ar' else 'Epileptic seizure prediction (Pre-seizure / Seizure)' }}</li>
+    <li>✅ {{ 'لوحة تحكم آمنة بين الطبيب والمريض' if session.get('lang') == 'ar' else 'Secure doctor-patient dashboard' }}</li>
+    <li>✅ {{ 'تنبيه جهات الاتصال الطارئة' if session.get('lang') == 'ar' else 'Emergency contact notification' }}</li>
+</ul>
+
+{% endblock %}

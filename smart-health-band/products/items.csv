@@ -1,0 +1,5 @@
+id,name,description,price,image
+band-pro,Smart Health Band Pro,"Real-time heart rate, SpO₂, body temperature, fall detection with GPS",149.99,band-pro.png
+epilepsy-module,Epilepsy Monitoring Module,"AI-powered seizure prediction (pre-seizure alerts)",89.99,epilepsy.png
+downsyndrome-package,Down Syndrome Care Package,"Specialized vitals monitoring + caregiver dashboard",199.99,downsyndrome.png
+gps-tracker,GPS Emergency Tracker,"Location sharing with emergency contacts",79.99,gps.png
